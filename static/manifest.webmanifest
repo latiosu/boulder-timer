@@ -1,0 +1,25 @@
+{
+    "short_name": "Boulder Timer",
+    "name": "Boulder Timer",
+    "description": "An IFSC-style timer for bouldering competitions",
+    "icons": [
+        {
+            "src": "favicon.ico",
+            "sizes": "48x48 32x32 16x16",
+            "type": "image/x-icon"
+        },
+        {
+            "sizes": "192x192",
+            "src": "/android-chrome-192x192.png",
+            "type": "image/png"
+        },
+        {
+            "sizes": "512x512",
+            "src": "/android-chrome-512x512.png",
+            "type": "image/png"
+        }
+    ],
+    "display": "standalone",
+    "theme_color": "#000000",
+    "background_color": "#000000"
+}
