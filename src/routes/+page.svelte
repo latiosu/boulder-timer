@@ -53,10 +53,16 @@
 		<h1>Boulder Timer</h1>
 
 		<section class="instructions">
-			<h2>How to Use the Timer</h2>
-			<p>
-				Select the timer style, set your options, and press "Start" to begin the competition.
-			</p>
+			<h2>Steps</h2>
+			<ol>
+				<li>1. Select the timer style</li>
+				<li>2. Set timer settings</li>
+				<li>3. Press "Start" to begin</li>
+			</ol>
+			<br/>
+			<h2>Shortcuts</h2>
+			<p>Press Spacebar (or Enter) to start/stop timer</p>
+			<p>Press Escape to reset timer</p>
 		</section>
 
 		<section class="timer-style">
@@ -74,7 +80,7 @@
 		</section>
 
 		<section class="options">
-			<h2>Options</h2>
+			<h2>Settings</h2>
 
 			<div class="option-group">
 				<label for="time-a">Time (min):</label>

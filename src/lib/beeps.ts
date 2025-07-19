@@ -1,4 +1,4 @@
-import base from '$app/paths';
+import { base } from '$app/paths';
 
 export function loadBeeps(beepStyle: string) {
     const longBeepIFSCPrague = base + '/sin_300Hz_1s.wav';
