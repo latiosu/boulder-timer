@@ -12,24 +12,26 @@
 
     const { number: propDuration = 60 * 4, number: propTransition = 15, string: propBeepStyle = 'JMSCA' } = $props();
     let duration: number = propDuration, transition: number = propTransition, beepStyle: string = propBeepStyle;
-    const paramDuration = page.url.searchParams.get('duration');
-    const paramTransition = page.url.searchParams.get('transition');
-    const paramBeepStyle = page.url.searchParams.get('beepStyle');
-
-    if (paramDuration) {
-        duration = parseInt(paramDuration) || propDuration;
-    }
-    if (paramTransition) {
-        transition = parseInt(paramTransition) ?? propTransition;
-    }
-    if (paramBeepStyle) {
-        beepStyle = paramBeepStyle;
-    }
-
     let isPaused: boolean = $state(true);
     let timer: number = $state(duration);
     let phase: string = $state('climb');
     let startBeep: HTMLAudioElement, oneMinBeep: HTMLAudioElement, countdownBeep: HTMLAudioElement, endBeep: HTMLAudioElement;
+
+    function loadSearchParams() {
+        const paramDuration = page.url.searchParams.get('duration');
+        const paramTransition = page.url.searchParams.get('transition');
+        const paramBeepStyle = page.url.searchParams.get('beepStyle');
+
+        if (paramDuration) {
+            duration = parseInt(paramDuration) || propDuration;
+        }
+        if (paramTransition) {
+            transition = parseInt(paramTransition) ?? propTransition;
+        }
+        if (paramBeepStyle) {
+            beepStyle = paramBeepStyle;
+        }
+    }
     
     function loadBeeps() {
         if (beepStyle === 'JMSCA') {
@@ -95,7 +97,10 @@
         }
     }
 
-    onMount(loadBeeps);
+    onMount(() => {
+        loadSearchParams();
+        loadBeeps();
+    });
 
     $effect(() => {
         if (isPaused) {
