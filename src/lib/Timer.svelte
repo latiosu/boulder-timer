@@ -11,6 +11,9 @@
 	let isPaused: boolean = $state(true);
 	let timer: number = $state(duration);
 	let phase: string = $state('climb');
+	let timeString: string = $derived(
+		String(Math.floor(timer / 60)).padStart(1, '0') + ':' + String(timer % 60).padStart(2, '0')
+	);
 
 	function handleKeyDown(event: { key: string }) {
 		switch (event.key) {
@@ -71,10 +74,30 @@
 </script>
 
 <svelte:window onkeydown={handleKeyDown} />
-<div class="flex h-full w-full items-center justify-center">
-	<div class="flex min-w-[100vh] font-[oswald] text-[50vh] select-none">
-		<span>{String(Math.floor(timer / 60)).padStart(1, '0')}</span>
-		<span>:</span>
-		<span>{String(timer % 60).padStart(2, '0')}</span>
+<div class="timer-container">
+	<div class="timer-text font-[oswald] select-none">
+		{#each timeString as token}
+			<span class={token === ':' ? '' : 'digit'}>{token}</span>
+		{/each}
 	</div>
 </div>
+
+<style>
+	.timer-container {
+		display: flex;
+		width: 100vw;
+		height: 100vh;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.timer-text {
+		display: flex;
+		font-size: 50vmin;
+	}
+
+	.digit {
+		width: 26vmin;
+		text-align: center;
+	}
+</style>
