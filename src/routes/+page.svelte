@@ -236,6 +236,10 @@
 		font-size: 1rem;
 	}
 
+	.example-sound {
+		background-color: #223;
+	}
+
 	.start-button {
 		background-color: #28a745;
 		color: white;
