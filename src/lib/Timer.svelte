@@ -16,6 +16,8 @@
 		String(Math.floor(timer / 60)).padStart(1, '0') + ':' + String(timer % 60).padStart(2, '0')
 	);
 
+	let wakeLock: WakeLockSentinel | null = null;
+
 	function toggleTimer() {
 		if (transition == 0 && timer == 0) {
 			timer = duration;
@@ -87,6 +89,30 @@
 
 		const id = setInterval(timerLogic, 1000);
 		return () => clearInterval(id);
+	});
+
+	$effect(() => {
+		const requestWakeLock = async () => {
+			if ('wakeLock' in navigator) {
+				try {
+					wakeLock = await navigator.wakeLock.request('screen');
+				} catch (err) {
+					// The wake lock request can fail if the document is not visible,
+					// or for other reasons.
+					// eslint-disable-next-line no-console
+					console.error('Screen Wake Lock request failed:', err);
+				}
+			}
+		};
+
+		requestWakeLock();
+
+		return () => {
+			if (wakeLock) {
+				wakeLock.release();
+				wakeLock = null;
+			}
+		};
 	});
 </script>
 
