@@ -2,10 +2,11 @@
 	import { loadBeeps } from '$lib/beeps';
 	import Timer from '$lib/Timer.svelte';
 
-	let timerStyle = $state('A');
+	let timerStyle = $state('noTransition');
 	let beepStyle = $state('JMSCA');
-	let durationMinutes = $state(4);
-	let transitionPeriod = $state(15);
+	let durationMinutes = $state('4');
+	let durationSeconds = $state('00');
+	let transitionSeconds = $state(15);
 	let showTimer = $state(false);
 
 	let startBeep = $state<HTMLAudioElement>();
@@ -20,7 +21,7 @@
 	function playOneMinBeep() {
 		oneMinBeep?.play();
 	}
-	
+
 	function playCountdownBeep() {
 		countdownBeep?.play();
 	}
@@ -40,8 +41,8 @@
 
 {#if showTimer}
 	<Timer
-		duration={durationMinutes * 60}
-		transition={timerStyle === 'A' ? transitionPeriod : 0}
+		duration={parseInt(durationMinutes) * 60 + parseInt(durationSeconds)}
+		transition={timerStyle === 'withTransition' ? transitionSeconds : 0}
 		{beepStyle}
 		{startBeep}
 		{oneMinBeep}
@@ -53,65 +54,85 @@
 		<h1>Boulder Timer</h1>
 
 		<section class="instructions">
-			<h2>Steps</h2>
+			<h2>Instructions</h2>
 			<ol>
-				<li>1. Select the timer style</li>
-				<li>2. Set timer settings</li>
-				<li>3. Press "Start" to begin</li>
+				<li>
+					1. Start and stop timer with <strong>Spacebar</strong> or <strong>tap the screen</strong>.
+				</li>
+				<li>
+					2. Reset timer with <strong>Escape</strong> or <strong>long press the screen</strong>.
+				</li>
+				<li>3. Exit timer with a <strong>page reload</strong>.</li>
 			</ol>
-			<br/>
-			<h2>Shortcuts</h2>
-			<p>Press Spacebar (or Enter) to start/stop timer</p>
-			<p>Press Escape to reset timer</p>
 		</section>
 
 		<section class="timer-style">
-			<h2>Select timer style</h2>
+			<h2>Timer type</h2>
 			<div class="options-container">
 				<label>
-					<input type="radio" bind:group={timerStyle} value="A" />
-					(A) Qualifications & Semi-finals flow (with transition period)
+					<input type="radio" bind:group={timerStyle} value="noTransition" />
+					Finals (climbing time only; timer stops at 0:00)
 				</label>
 				<label>
-					<input type="radio" bind:group={timerStyle} value="B" />
-					(B) Finals flow (no transition period, auto-pause on end)
+					<input type="radio" bind:group={timerStyle} value="withTransition" />
+					Qualifiers & Semi-finals (alternates between climbing and transition time; timer does not stop)
 				</label>
 			</div>
 		</section>
 
 		<section class="options">
 			<h2>Settings</h2>
-
 			<div class="option-group">
-				<label for="time-a">Time (min):</label>
-				<input type="number" id="time-a" bind:value={durationMinutes} />
+				<label for="climbing-time">Climbing time (min:sec):</label>
+				<div>
+					<input
+						id="climbing-time-min"
+						type="text"
+						inputmode="numeric"
+						pattern="\d*"
+						bind:value={durationMinutes}
+					/>
+					<span>:</span>
+					<input
+						id="climbing-time-sec"
+						type="text"
+						inputmode="numeric"
+						pattern="\d*"
+						bind:value={durationSeconds}
+					/>
+				</div>
 			</div>
-			{#if timerStyle === 'A'}
+			{#if timerStyle === 'withTransition'}
 				<div class="option-group">
-					<label for="transition">Transition Period (s):</label>
-					<input type="number" id="transition" bind:value={transitionPeriod} />
+					<label for="transition-time">Transition time (s):</label>
+					<input
+						id="transition-time"
+						type="text"
+						inputmode="numeric"
+						pattern="\d*"
+						bind:value={transitionSeconds}
+					/>
 				</div>
 			{/if}
 
 			<div class="option-group">
 				<label for="beep-style">Beep style:</label>
 				<select id="beep-style" bind:value={beepStyle}>
-					<option value="JMSCA">JMSCA (recommended)</option>
+					<option value="JMSCA">Boulder Japan Cup 2025 (recommended)</option>
 					<option value="IFSC_INNSBRUCK">IFSC Innsbruck 2025</option>
 					<option value="IFSC_PRAGUE">IFSC Prague 2025</option>
 				</select>
 			</div>
 			<div class="option-group">
 				{#if beepStyle === 'JMSCA'}
-					<button onclick={playStartBeep}>🔊 Start</button>
-					<button onclick={playOneMinBeep}>🔊 1 min</button>
-					<button onclick={playCountdownBeep}>🔊 Countdown</button>
-					<button onclick={playEndBeep}>🔊 End</button>
+					<button class="example-sound" onclick={playStartBeep}>🔊 Start</button>
+					<button class="example-sound" onclick={playOneMinBeep}>🔊 1 min</button>
+					<button class="example-sound" onclick={playCountdownBeep}>🔊 Countdown</button>
+					<button class="example-sound" onclick={playEndBeep}>🔊 End</button>
 				{:else if beepStyle === 'IFSC_PRAGUE' || beepStyle === 'IFSC_INNSBRUCK'}
-					<button onclick={playStartBeep}>🔊 Start/End</button>
-					<button onclick={playOneMinBeep}>🔊 1 min/Countdown</button>
+					<button class="example-sound" onclick={playStartBeep}>🔊 Start/End</button>
+					<button class="example-sound" onclick={playOneMinBeep}>🔊 1 min/Countdown</button>
 				{/if}
-
 			</div>
 		</section>
 
@@ -119,8 +140,19 @@
 	</main>
 	<footer>
 		<p>
-			<a href="https://github.com/latiosu/boulder-timer" target="_blank" rel="noopener noreferrer" class="underline">Open-source</a> and made
-			with love by <a href="https://www.instagram.com/eric.c.liu/" target="_blank" rel="noopener noreferrer" class="underline">Eric Liu</a> ❤️
+			<a
+				href="https://github.com/latiosu/boulder-timer"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="underline">Open-source</a
+			>
+			and made with love by
+			<a
+				href="https://www.instagram.com/eric.c.liu/"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="underline">Eric Liu</a
+			> ❤️
 		</p>
 	</footer>
 {/if}
@@ -130,15 +162,13 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 2rem;
-		padding: 2rem;
-		font-family: sans-serif;
+		gap: 1.5rem;
+		padding: 1.5rem;
 	}
 
 	h1 {
 		font-size: 2.5rem;
 		font-weight: bold;
-		margin-bottom: 1rem;
 	}
 
 	h2 {
@@ -164,18 +194,20 @@
 	.option-group {
 		display: flex;
 		align-items: center;
-		gap: 1rem;
+		flex-wrap: wrap;
+		gap: 0.5rem;
 		margin-bottom: 1rem;
 	}
 
 	label {
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
+		gap: 1rem;
+		margin-right: 0.5rem;
 	}
 
-	input[type='number'] {
-		width: 60px;
+	input[type='text'] {
+		width: 3rem;
 		padding: 0.5rem;
 		border: 1px solid #ccc;
 		border-radius: 4px;
@@ -185,6 +217,11 @@
 		padding: 0.5rem;
 		border: 1px solid #ccc;
 		border-radius: 4px;
+	}
+	@media only screen and (max-width: 600px) {
+		select[id='beep-style'] {
+			width: 100%;
+		}
 	}
 
 	option {
@@ -203,12 +240,15 @@
 		background-color: #28a745;
 		color: white;
 		font-weight: bold;
+		font-size: 1.5rem;
 		border: none;
+		padding: 0.75rem 3rem;
 	}
 
 	footer {
-		margin-top: 2rem;
 		text-align: center;
 		color: #666;
+		margin-top: 1rem;
+		margin-bottom: 1rem;
 	}
 </style>
