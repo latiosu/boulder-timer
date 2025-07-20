@@ -1,8 +1,9 @@
 <script lang="ts">
+	import { tap, type TapCustomEvent, press, type PressCustomEvent } from 'svelte-gestures';
+
 	let {
 		duration = 60 * 4,
 		transition = 15,
-		beepStyle = 'JMSCA',
 		startBeep,
 		oneMinBeep,
 		countdownBeep,
@@ -15,22 +16,38 @@
 		String(Math.floor(timer / 60)).padStart(1, '0') + ':' + String(timer % 60).padStart(2, '0')
 	);
 
-	function handleKeyDown(event: { key: string }) {
+	function toggleTimer() {
+		if (transition == 0 && timer == 0) {
+			timer = duration;
+		} else {
+			isPaused = !isPaused;
+		}
+	}
+
+	function resetTimer() {
+		timer = duration;
+		phase = 'climb';
+		isPaused = true;
+	}
+
+	function onkeydown(event: { key: string }) {
 		switch (event.key) {
 			case 'Enter':
 			case ' ':
-				if (transition == 0 && timer == 0) {
-					timer = duration;
-				} else {
-					isPaused = !isPaused;
-				}
+				toggleTimer();
 				break;
 			case 'Escape':
-				timer = duration;
-				phase = 'climb';
-				isPaused = true;
+				resetTimer();
 				break;
 		}
+	}
+
+	function ontap(event: TapCustomEvent) {
+		toggleTimer();
+	}
+
+	function onpress(event: PressCustomEvent) {
+		resetTimer();
 	}
 
 	function timerLogic() {
@@ -73,8 +90,14 @@
 	});
 </script>
 
-<svelte:window onkeydown={handleKeyDown} />
-<div class="timer-container">
+<svelte:window {onkeydown} />
+<div
+	class="timer-container"
+	use:tap={() => ({ timeframe: 300 })}
+	{ontap}
+	use:press={() => ({ timeframe: 2000, triggerBeforeFinished: true })}
+	{onpress}
+>
 	<div class="timer-text font-[oswald] select-none">
 		{#each timeString as token}
 			<span class={token === ':' ? '' : 'digit'}>{token}</span>

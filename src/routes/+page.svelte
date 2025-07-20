@@ -43,7 +43,6 @@
 	<Timer
 		duration={parseInt(durationMinutes) * 60 + parseInt(durationSeconds)}
 		transition={timerStyle === 'withTransition' ? transitionSeconds : 0}
-		{beepStyle}
 		{startBeep}
 		{oneMinBeep}
 		{countdownBeep}
