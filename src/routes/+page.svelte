@@ -145,7 +145,6 @@
 					<option value="IFSC_PRAGUE">IFSC Prague 2025</option>
 				</select>
 			</div>
-			<!-- Should the beeps be louder? -->
 			<div class="option-group">
 				{#if beepStyle === 'JMSCA'}
 					<button class="example-sound" onclick={playStartBeep}>🔊 Start</button>
