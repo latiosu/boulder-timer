@@ -1,14 +1,14 @@
 import { base } from '$app/paths';
 
 export function loadBeeps(beepStyle: string) {
-    const longBeepIFSCPrague = base + '/sin_300Hz_1s.wav';
-    const longBeepIFSCInnsbruck = base + '/sin_500Hz_1s.wav';
-    const shortBeepIFSCPrague = base + '/sin_990Hz_0.3s.wav';
-    const shortBeepIFSCInnsbruck = base + '/sin_1200Hz_0.3s.wav';
-    const startBeepJMSCA = base + '/sqr_523.25Hz_0.6s.wav';
-    const oneMinBeepJMSCA = base + '/sqr_1760Hz_0.4s.wav';
-    const countdownBeepJMSCA = base + '/sqr_440Hz_0.1s.wav';
-    const endBeepJMSCA = base + '/sqr_880Hz_1s.wav';
+    const longBeepIFSCPrague = base + '/beeps/sin_300Hz_1s.wav';
+    const longBeepIFSCInnsbruck = base + '/beeps/sin_500Hz_1s.wav';
+    const shortBeepIFSCPrague = base + '/beeps/sin_990Hz_0.3s.wav';
+    const shortBeepIFSCInnsbruck = base + '/beeps/sin_1200Hz_0.3s.wav';
+    const startBeepJMSCA = base + '/beeps/sqr_523.25Hz_0.6s.wav';
+    const oneMinBeepJMSCA = base + '/beeps/sqr_1760Hz_0.4s.wav';
+    const countdownBeepJMSCA = base + '/beeps/sqr_440Hz_0.1s.wav';
+    const endBeepJMSCA = base + '/beeps/sqr_880Hz_1s.wav';
 
     let startBeep, oneMinBeep, countdownBeep, endBeep;
 
