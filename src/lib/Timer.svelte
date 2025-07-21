@@ -85,7 +85,7 @@
 			return;
 		}
 
-		if (timer === duration) {
+		if (phase === 'climb' && timer === duration) {
 			startBeep.play();
 		}
 
