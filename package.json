@@ -35,6 +35,7 @@
 		"vite": "^7.0.4"
 	},
 	"dependencies": {
+		"posthog-js": "^1.257.0",
 		"svelte-gestures": "^5.1.4"
 	}
 }
