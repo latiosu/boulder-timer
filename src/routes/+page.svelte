@@ -6,6 +6,8 @@
 	let beepStyle = $state('JMSCA');
 	let durationMinutes = $state('4');
 	let durationSeconds = $state('00');
+	let parsedMinutes = $derived(parseInt(durationMinutes));
+	let parsedSeconds = $derived(parseInt(durationSeconds));
 	let transitionSeconds = $state(15);
 	let showTimer = $state(false);
 	let hasCountdownColour = $state(true);
@@ -43,7 +45,8 @@
 
 {#if showTimer}
 	<Timer
-		duration={parseInt(durationMinutes) * 60 + parseInt(durationSeconds)}
+		duration={(isNaN(parsedMinutes) ? 0 : parsedMinutes) * 60 +
+			(isNaN(parsedSeconds) ? 0 : parsedSeconds)}
 		transition={timerStyle === 'withTransition' ? transitionSeconds : 0}
 		{startBeep}
 		{oneMinBeep}
@@ -96,6 +99,9 @@
 						type="text"
 						inputmode="numeric"
 						pattern="\d*"
+						minlength="1"
+						maxlength="2"
+						placeholder="00"
 						bind:value={durationMinutes}
 					/>
 					<span>:</span>
@@ -106,6 +112,9 @@
 						type="text"
 						inputmode="numeric"
 						pattern="\d*"
+						minlength="1"
+						maxlength="2"
+						placeholder="00"
 						bind:value={durationSeconds}
 					/>
 				</div>
