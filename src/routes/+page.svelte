@@ -87,10 +87,12 @@
 		<section class="options">
 			<h2>Settings</h2>
 			<div class="option-group">
-				<label for="climbing-time">Climbing time (min:sec):</label>
+				<span id="climbing-time">Climbing time (min:sec):</span>
 				<div>
 					<input
 						id="climbing-time-min"
+						aria-labelledby="climbing-time"
+						aria-label="Climbing time minutes"
 						type="text"
 						inputmode="numeric"
 						pattern="\d*"
@@ -99,6 +101,8 @@
 					<span>:</span>
 					<input
 						id="climbing-time-sec"
+						aria-labelledby="climbing-time"
+						aria-label="Climbing time seconds"
 						type="text"
 						inputmode="numeric"
 						pattern="\d*"
@@ -120,11 +124,7 @@
 
 				<div class="option-group">
 					<label>
-						<input
-							id="transition-colour"
-							type="checkbox"
-							bind:checked={hasTransitionColour}
-						/>
+						<input id="transition-colour" type="checkbox" bind:checked={hasTransitionColour} />
 						Use a different colour for the transition time
 					</label>
 				</div>
@@ -132,11 +132,7 @@
 
 			<div class="option-group">
 				<label>
-					<input
-						id="countdown-colour"
-						type="checkbox"
-						bind:checked={hasCountdownColour}
-					/>
+					<input id="countdown-colour" type="checkbox" bind:checked={hasCountdownColour} />
 					Use a different colour during 5s countdown
 				</label>
 			</div>
@@ -279,7 +275,7 @@
 
 	footer {
 		text-align: center;
-		color: #666;
+		color: #999;
 		margin-top: 1rem;
 		margin-bottom: 1rem;
 	}
