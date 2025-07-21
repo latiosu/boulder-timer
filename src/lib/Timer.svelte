@@ -7,7 +7,9 @@
 		startBeep,
 		oneMinBeep,
 		countdownBeep,
-		endBeep
+		endBeep,
+		hasCountdownColour,
+		hasTransitionColour
 	} = $props();
 	let isPaused: boolean = $state(true);
 	let timer: number = $state(duration);
@@ -124,7 +126,13 @@
 	use:press={() => ({ timeframe: 2000, triggerBeforeFinished: true })}
 	{onpress}
 >
-	<div class="timer-text font-[oswald] select-none">
+	<div
+		class="timer-text font-[oswald] select-none {hasCountdownColour &&
+		phase === 'climb' &&
+		timer <= 5
+			? 'countdown-colour'
+			: ''} {hasTransitionColour && phase === 'transition' ? 'transition-colour' : ''}"
+	>
 		{#each timeString as token}
 			<span class={token === ':' ? '' : 'digit'}>{token}</span>
 		{/each}
@@ -148,5 +156,13 @@
 	.digit {
 		width: 26vmin;
 		text-align: center;
+	}
+
+	.transition-colour {
+		color: green;
+	}
+
+	.countdown-colour {
+		color: red;
 	}
 </style>

@@ -8,6 +8,8 @@
 	let durationSeconds = $state('00');
 	let transitionSeconds = $state(15);
 	let showTimer = $state(false);
+	let hasCountdownColour = $state(true);
+	let hasTransitionColour = $state(true);
 
 	let startBeep = $state<HTMLAudioElement>();
 	let oneMinBeep = $state<HTMLAudioElement>();
@@ -47,6 +49,8 @@
 		{oneMinBeep}
 		{countdownBeep}
 		{endBeep}
+		{hasCountdownColour}
+		{hasTransitionColour}
 	/>
 {:else}
 	<main>
@@ -73,6 +77,7 @@
 					Finals (climbing time only; timer stops at 0:00)
 				</label>
 				<label>
+					<!-- Should transition time be renamed to preparation time? -->
 					<input type="radio" bind:group={timerStyle} value="withTransition" />
 					Qualifiers & Semi-finals (alternates between climbing and transition time; timer does not stop)
 				</label>
@@ -112,7 +117,29 @@
 						bind:value={transitionSeconds}
 					/>
 				</div>
+
+				<div class="option-group">
+					<label>
+						<input
+							id="transition-colour"
+							type="checkbox"
+							bind:checked={hasTransitionColour}
+						/>
+						Use a different colour for the transition time
+					</label>
+				</div>
 			{/if}
+
+			<div class="option-group">
+				<label>
+					<input
+						id="countdown-colour"
+						type="checkbox"
+						bind:checked={hasCountdownColour}
+					/>
+					Use a different colour during 5s countdown
+				</label>
+			</div>
 
 			<div class="option-group">
 				<label for="beep-style">Beep style:</label>
@@ -122,6 +149,7 @@
 					<option value="IFSC_PRAGUE">IFSC Prague 2025</option>
 				</select>
 			</div>
+			<!-- Should the beeps be louder? -->
 			<div class="option-group">
 				{#if beepStyle === 'JMSCA'}
 					<button class="example-sound" onclick={playStartBeep}>🔊 Start</button>
@@ -210,6 +238,7 @@
 		padding: 0.5rem;
 		border: 1px solid #ccc;
 		border-radius: 4px;
+		text-align: center;
 	}
 
 	select {
