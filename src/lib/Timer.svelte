@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { tap, press } from 'svelte-gestures';
 
+	const HOLD_THRESHOLD = 2000;
+
 	let {
 		duration = 60 * 4,
 		transition = 15,
@@ -20,6 +22,10 @@
 
 	let wakeLock: WakeLockSentinel | null = null;
 
+	let isPressing: boolean = $state(false);
+	let pressStartTime: number = $state(0);
+	let pressDuration: number = $state(0);
+
 	function toggleTimer() {
 		if (transition == 0 && timer == 0) {
 			timer = duration;
@@ -38,10 +44,24 @@
 		switch (event.key) {
 			case 'Enter':
 			case ' ':
-				toggleTimer();
+				if (!isPressing) {
+					pressStartTime = Date.now();
+					isPressing = true;
+				} else if (pressDuration >= HOLD_THRESHOLD) {
+					resetTimer();
+				}
 				break;
-			case 'Escape':
-				resetTimer();
+		}
+	}
+
+	function onkeyup(event: { key: string }) {
+		switch (event.key) {
+			case 'Enter':
+			case ' ':
+				if (isPressing && pressDuration < HOLD_THRESHOLD) {
+					toggleTimer();
+				}
+				isPressing = false;
 				break;
 		}
 	}
@@ -52,6 +72,15 @@
 
 	function onpress() {
 		resetTimer();
+	}
+
+	function onpressdown() {
+		isPressing = true;
+		pressStartTime = Date.now();
+	}
+
+	function onpressup() {
+		isPressing = false;
 	}
 
 	function timerLogic() {
@@ -116,15 +145,35 @@
 			}
 		};
 	});
+
+	$effect(() => {
+		if (!isPressing) {
+			pressDuration = 0;
+			return;
+		}
+
+		let frameId: number;
+		const update = () => {
+			pressDuration = Date.now() - pressStartTime;
+			frameId = requestAnimationFrame(update);
+		};
+		frameId = requestAnimationFrame(update);
+
+		return () => {
+			cancelAnimationFrame(frameId);
+		};
+	});
 </script>
 
-<svelte:window {onkeydown} />
+<svelte:window {onkeydown} {onkeyup} />
 <div
 	class="timer-container"
-	use:tap={() => ({ timeframe: 300 })}
+	use:tap={() => ({ timeframe: HOLD_THRESHOLD })}
+	use:press={() => ({ timeframe: HOLD_THRESHOLD, triggerBeforeFinished: true })}
 	{ontap}
-	use:press={() => ({ timeframe: 2000, triggerBeforeFinished: true })}
 	{onpress}
+	{onpressdown}
+	{onpressup}
 >
 	<div
 		class="timer-text font-[oswald] select-none {hasCountdownColour &&
@@ -138,6 +187,10 @@
 		{/each}
 	</div>
 </div>
+
+{#if isPressing}
+	<div class="press-indicator-bar" style="width: {Math.min(pressDuration / 20, 100)}vw;"></div>
+{/if}
 
 <style>
 	.timer-container {
@@ -164,5 +217,15 @@
 
 	.countdown-colour {
 		color: red;
+	}
+
+	.press-indicator-bar {
+		position: fixed;
+		bottom: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		height: 1vh;
+		background-color: white;
+		will-change: width;
 	}
 </style>

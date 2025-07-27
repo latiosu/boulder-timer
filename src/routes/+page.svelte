@@ -63,12 +63,12 @@
 			<h2>Instructions</h2>
 			<ol>
 				<li>
-					1. Start and stop timer with <strong>Spacebar</strong> or <strong>tap the screen</strong>.
+					1. Tap <strong>Spacebar</strong>/<strong>screen</strong> to start and stop timer.
 				</li>
 				<li>
-					2. Reset timer with <strong>Escape</strong> or <strong>long press the screen</strong>.
+					2. Hold down <strong>Spacebar</strong>/<strong>screen</strong> to reset timer.
 				</li>
-				<li>3. Exit timer with a <strong>page reload</strong>.</li>
+				<li>3. <strong>Reload page</strong> to exit timer.</li>
 			</ol>
 		</section>
 
