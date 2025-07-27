@@ -1,7 +1,16 @@
 <script lang="ts">
 	import posthog from 'posthog-js';
+	import { browser } from '$app/environment';
+	import { onMount } from 'svelte';
 	import { loadBeeps } from '$lib/beeps';
 	import Timer from '$lib/Timer.svelte';
+
+	let countdownColourVisible = $state(false);
+	onMount(() => {
+		if (browser) {
+			countdownColourVisible = posthog.getFeatureFlag('countdown-colour') == 'option';
+		}
+	});
 
 	let timerStyle = $state('noTransition');
 	let beepStyle = $state('JMSCA');
@@ -141,7 +150,7 @@
 				</div>
 			{/if}
 
-			{#if posthog.getFeatureFlag('countdown-colour') == 'example-variant'}
+			{#if countdownColourVisible}
 				<div class="option-group">
 					<label>
 						<input id="countdown-colour" type="checkbox" bind:checked={hasCountdownColour} />
