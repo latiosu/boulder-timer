@@ -37,10 +37,7 @@
 
 	function startTimer() {
 		showTimer = true;
-		posthog.capture(
-			'timer_start',
-			{ property1: 'value', property2: 'another value' }
-		);
+		posthog.capture('timer_start');
 	}
 
 	$effect(() => {
