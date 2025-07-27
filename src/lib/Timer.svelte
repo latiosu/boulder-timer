@@ -1,4 +1,5 @@
 <script lang="ts">
+	import posthog from 'posthog-js';
 	import { tap, press } from 'svelte-gestures';
 
 	const HOLD_THRESHOLD = 2000;
@@ -49,6 +50,7 @@
 					isPressing = true;
 				} else if (pressDuration >= HOLD_THRESHOLD) {
 					resetTimer();
+					posthog.capture('timer_reset', { input: event.key });
 				}
 				break;
 		}
@@ -72,6 +74,7 @@
 
 	function onpress() {
 		resetTimer();
+		posthog.capture('timer_reset', { input: 'press' });
 	}
 
 	function onpressdown() {

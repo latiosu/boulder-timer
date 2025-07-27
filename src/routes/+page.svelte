@@ -1,4 +1,5 @@
 <script lang="ts">
+	import posthog from 'posthog-js';
 	import { loadBeeps } from '$lib/beeps';
 	import Timer from '$lib/Timer.svelte';
 
@@ -36,6 +37,10 @@
 
 	function startTimer() {
 		showTimer = true;
+		posthog.capture(
+			'timer_start',
+			{ property1: 'value', property2: 'another value' }
+		);
 	}
 
 	$effect(() => {
@@ -139,12 +144,14 @@
 				</div>
 			{/if}
 
-			<div class="option-group">
-				<label>
-					<input id="countdown-colour" type="checkbox" bind:checked={hasCountdownColour} />
-					Use a different colour during 5s countdown
-				</label>
-			</div>
+			{#if posthog.getFeatureFlag('countdown-colour') == 'example-variant'}
+				<div class="option-group">
+					<label>
+						<input id="countdown-colour" type="checkbox" bind:checked={hasCountdownColour} />
+						Use a different colour during 5s countdown
+					</label>
+				</div>
+			{/if}
 
 			<div class="option-group">
 				<label for="beep-style">Beep style:</label>
