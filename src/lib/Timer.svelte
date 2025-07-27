@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { tap, type TapCustomEvent, press, type PressCustomEvent } from 'svelte-gestures';
+	import { tap, press } from 'svelte-gestures';
 
 	let {
 		duration = 60 * 4,
@@ -46,11 +46,11 @@
 		}
 	}
 
-	function ontap(event: TapCustomEvent) {
+	function ontap() {
 		toggleTimer();
 	}
 
-	function onpress(event: PressCustomEvent) {
+	function onpress() {
 		resetTimer();
 	}
 
@@ -101,7 +101,7 @@
 				} catch (err) {
 					// The wake lock request can fail if the document is not visible,
 					// or for other reasons.
-					// eslint-disable-next-line no-console
+
 					console.error('Screen Wake Lock request failed:', err);
 				}
 			}
@@ -133,7 +133,7 @@
 			? 'countdown-colour'
 			: ''} {hasTransitionColour && phase === 'transition' ? 'transition-colour' : ''}"
 	>
-		{#each timeString as token}
+		{#each timeString as token, i (i)}
 			<span class={token === ':' ? '' : 'digit'}>{token}</span>
 		{/each}
 	</div>
